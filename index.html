@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio Viewer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Zoom Controls -->
+  <div class="controls">
+    <div class="zoom-buttons">
+      <button id="zoomOut">−</button>
+      <span class="zoom-level" id="zoomValue">100%</span>
+      <button id="zoomIn">＋</button>
+    </div>
+  </div>
+
+  <!-- PDF Download Link -->
+  <div class="download-link">
+    <a href="portfolio_print.pdf" download>📄 Download CMYK PDF version</a>
+  </div>
+
+  <!-- SVG Pages -->
+  <div class="portfolio-container" id="portfolioContainer"></div>
+
+  <script>
+    const container = document.getElementById("portfolioContainer");
+
+    for (let i = 1; i <= 70; i++) {
+      const img = document.createElement("img");
+      const num = i.toString().padStart(2, '0');
+      img.src = `svgs/Portfolio-${num}.svg`; // ハイフン対応済み
+      img.alt = `Portfolio Page ${i}`;
+      img.className = "portfolio-page";
+      container.appendChild(img);
+    }
+
+    const zoomInBtn = document.getElementById("zoomIn");
+    const zoomOutBtn = document.getElementById("zoomOut");
+    const zoomValueDisplay = document.getElementById("zoomValue");
+
+    let currentZoom = 100;
+
+    function updateZoom() {
+      const scale = currentZoom / 100;
+      zoomValueDisplay.textContent = `${currentZoom}%`;
+      document.querySelectorAll(".portfolio-page").forEach(img => {
+        img.style.transform = `scale(${scale})`;
+      });
+    }
+
+    zoomInBtn.addEventListener("click", () => {
+      if (currentZoom < 150) {
+        currentZoom += 10;
+        updateZoom();
+      }
+    });
+
+    zoomOutBtn.addEventListener("click", () => {
+      if (currentZoom > 50) {
+        currentZoom -= 10;
+        updateZoom();
+      }
+    });
+
+    updateZoom();
+  </script>
+
+</body>
+</html>
