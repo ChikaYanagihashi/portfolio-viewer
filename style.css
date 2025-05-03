@@ -1,70 +1,77 @@
 body {
   margin: 0;
-  padding: 20px;
-  font-family: sans-serif;
+  padding: 0;
   background-color: #f5f5f5;
-}
-
-.controls {
+  font-family: sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
 }
 
-.controls button {
-  padding: 6px 12px;
-  font-size: 16px;
-  cursor: pointer;
+.top-bar {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.zoom-buttons {
+.zoom-controls, .nav-controls, .pdf-download {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-#zoomValue {
-  min-width: 50px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.download-link {
-  text-align: center;
-  margin: 20px;
-}
-
-.download-link a {
+button {
+  padding: 8px 12px;
   font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+a {
   color: #007bff;
   text-decoration: none;
+  font-size: 14px;
 }
 
-.download-link a:hover {
+a:hover {
   text-decoration: underline;
 }
 
-.portfolio-container {
+.spread-container {
+  margin: 30px auto;
+  max-width: 100%;
   display: flex;
   justify-content: center;
-  flex-wrap: nowrap;
+  padding: 0 20px;
+}
+
+.spread, .single-page {
+  display: flex;
   gap: 40px;
-  margin: 20px auto;
-  max-width: 90%;
+  justify-content: center;
+  flex-wrap: nowrap;
 }
 
 .portfolio-page {
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  background: white;
-  transition: transform 0.2s ease;
-  transform-origin: top center;
-  max-width: 45%;
+  max-width: 45vw;
   height: auto;
-}
-
-.portfolio-page.single {
-  max-width: 50%;
-  margin-left: auto;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background: white;
+  transform-origin: top center;
 }
