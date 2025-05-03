@@ -8,85 +8,88 @@
 </head>
 <body>
 
-  <div class="top-bar">
-    <div class="zoom-controls">
-      <button id="zoomOut">−</button>
-      <span id="zoomValue">100%</span>
-      <button id="zoomIn">＋</button>
-    </div>
-    <div class="nav-controls">
-      <button id="prevBtn">← Previous</button>
-      <button id="nextBtn">Next →</button>
-    </div>
-    <div class="pdf-download">
-      <a href="portfolio_print.pdf" download>📄 Download CMYK PDF</a>
-    </div>
+  <div class="controls">
+    <button id="prevBtn">← Previous</button>
+    <button id="zoomOutBtn">−</button>
+    <span id="zoomValue">100%</span>
+    <button id="zoomInBtn">+</button>
+    <button id="nextBtn">Next →</button>
+    <a id="pdfDownload" href="portfolio_print.pdf" download>Download PDF</a>
   </div>
 
-  <div class="spread-container" id="spreadContainer"></div>
+  <div class="portfolio-container" id="portfolioContainer"></div>
+  <div class="page-indicator" id="pageIndicator"></div>
 
   <script>
-    const totalPages = 70;
-    let currentPage = 1;
-    let zoom = 1;
-
-    const spreadContainer = document.getElementById("spreadContainer");
+    const container = document.getElementById("portfolioContainer");
     const zoomValue = document.getElementById("zoomValue");
+    const pageIndicator = document.getElementById("pageIndicator");
+    let currentIndex = 0;
+    let zoomLevel = 1.0;
+    const totalPages = 70;
 
-    function renderPages() {
-      spreadContainer.innerHTML = "";
-
-      const createPage = (num) => {
-        const img = document.createElement("img");
-        const pageNum = num.toString().padStart(2, '0');
-        img.src = `svgs/Portfolio-${pageNum}.svg`;
-        img.alt = `Page ${num}`;
-        img.className = "portfolio-page";
-        img.style.transform = `scale(${zoom})`;
-        return img;
-      };
-
-      if (currentPage === 1) {
-        const page = createPage(1);
-        const wrapper = document.createElement("div");
-        wrapper.className = "single-page";
-        wrapper.appendChild(page);
-        spreadContainer.appendChild(wrapper);
-      } else {
-        const left = createPage(currentPage);
-        const right = currentPage + 1 <= totalPages ? createPage(currentPage + 1) : null;
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "spread";
-        wrapper.appendChild(left);
-        if (right) wrapper.appendChild(right);
-        spreadContainer.appendChild(wrapper);
-      }
-
-      zoomValue.textContent = `${Math.round(zoom * 100)}%`;
+    function createImageElement(i) {
+      const img = document.createElement("img");
+      const num = (i + 1).toString().padStart(2, "0");
+      img.src = `svgs/Portfolio-${num}.svg`;
+      img.alt = `Portfolio Page ${i + 1}`;
+      img.className = "portfolio-page";
+      img.style.transform = `scale(${zoomLevel})`;
+      return img;
     }
 
-    document.getElementById("zoomIn").addEventListener("click", () => {
-      zoom = Math.min(zoom + 0.1, 2);
-      renderPages();
-    });
+    function renderPages() {
+      container.innerHTML = "";
 
-    document.getElementById("zoomOut").addEventListener("click", () => {
-      zoom = Math.max(zoom - 0.1, 0.5);
-      renderPages();
-    });
+      const gap = 40 * zoomLevel;
+      container.style.gap = `${gap}px`;
+
+      const pages = [];
+
+      if (currentIndex === 0) {
+        const singlePage = createImageElement(0);
+        singlePage.classList.add("single");
+        pages.push(singlePage);
+        pageIndicator.textContent = `Page 1`;
+      } else {
+        const left = currentIndex;
+        const right = currentIndex + 1;
+
+        if (left < totalPages) pages.push(createImageElement(left));
+        if (right < totalPages) pages.push(createImageElement(right));
+
+        pageIndicator.textContent = `Pages ${left + 1}–${Math.min(right + 1, totalPages)}`;
+      }
+
+      pages.forEach(p => container.appendChild(p));
+    }
 
     document.getElementById("prevBtn").addEventListener("click", () => {
-      if (currentPage === 1) return;
-      currentPage = Math.max(currentPage - 2, 1);
+      if (currentIndex === 0) return;
+      currentIndex = Math.max(0, currentIndex - 2);
       renderPages();
     });
 
     document.getElementById("nextBtn").addEventListener("click", () => {
-      if (currentPage === 1) currentPage = 2;
-      else currentPage = Math.min(currentPage + 2, totalPages - (totalPages % 2 === 0 ? 1 : 0));
+      if (currentIndex === 0) currentIndex = 1;
+      else currentIndex = Math.min(totalPages - 1, currentIndex + 2);
       renderPages();
     });
+
+    document.getElementById("zoomInBtn").addEventListener("click", () => {
+      zoomLevel = Math.min(2.0, zoomLevel + 0.1);
+      updateZoom();
+    });
+
+    document.getElementById("zoomOutBtn").addEventListener("click", () => {
+      zoomLevel = Math.max(0.5, zoomLevel - 0.1);
+      updateZoom();
+    });
+
+    function updateZoom() {
+      zoomValue.textContent = `${Math.round(zoomLevel * 100)}%`;
+      renderPages();
+    }
 
     renderPages();
   </script>
