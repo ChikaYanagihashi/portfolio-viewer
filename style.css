@@ -1,6 +1,5 @@
 body {
   margin: 0;
-  padding: 0;
   background-color: #ffffff;
   font-family: sans-serif;
   overflow-x: hidden;
@@ -47,8 +46,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 40px;
   flex-wrap: nowrap;
+  transition: gap 0.2s ease;
 }
 
 .page-wrapper {
@@ -59,7 +58,7 @@ body {
 }
 
 .portfolio-page {
-  width: 45vw;
+  width: 48vw;
   max-width: 800px;
   height: auto;
   display: block;
