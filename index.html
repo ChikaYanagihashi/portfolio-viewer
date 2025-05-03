@@ -8,91 +8,90 @@
 </head>
 <body>
 
-  <!-- Zoom & PDF Controls -->
-  <div class="top-controls">
-    <div class="zoom-buttons">
+  <div class="top-bar">
+    <div class="controls">
       <button id="zoomOut">−</button>
       <span id="zoomValue">100%</span>
       <button id="zoomIn">＋</button>
+      <button id="prevPage">⟵ Previous</button>
+      <button id="nextPage">Next ⟶</button>
     </div>
-    <a href="portfolio_print.pdf" download class="download-link">📄 Download PDF (CMYK)</a>
+    <div class="download">
+      <a href="portfolio_print.pdf" download>📄 Download CMYK PDF</a>
+    </div>
   </div>
 
-  <!-- Portfolio Viewer -->
-  <div class="viewer">
-    <div class="page" id="leftPage"></div>
-    <div class="page" id="rightPage"></div>
-  </div>
-
-  <!-- Navigation -->
-  <div class="nav-buttons">
-    <button id="prevBtn">⟵ Previous</button>
-    <button id="nextBtn">Next ⟶</button>
-  </div>
+  <div class="viewer" id="viewer"></div>
 
   <script>
     const totalPages = 70;
+    const viewer = document.getElementById("viewer");
     let currentPage = 1;
-    let zoomLevel = 100;
+    let zoom = 100;
 
-    const leftPage = document.getElementById("leftPage");
-    const rightPage = document.getElementById("rightPage");
-    const zoomValue = document.getElementById("zoomValue");
-
-    function loadPages() {
-      leftPage.innerHTML = "";
-      rightPage.innerHTML = "";
-
-      const leftNum = currentPage;
-      const rightNum = currentPage + 1;
-
-      if (leftNum <= totalPages) {
-        const imgLeft = document.createElement("img");
-        imgLeft.src = `svgs/Portfolio-${String(leftNum).padStart(2, "0")}.svg`;
-        imgLeft.style.transform = `scale(${zoomLevel / 100})`;
-        leftPage.appendChild(imgLeft);
-      }
-
-      if (rightNum <= totalPages) {
-        const imgRight = document.createElement("img");
-        imgRight.src = `svgs/Portfolio-${String(rightNum).padStart(2, "0")}.svg`;
-        imgRight.style.transform = `scale(${zoomLevel / 100})`;
-        rightPage.appendChild(imgRight);
-      }
+    function updateZoomDisplay() {
+      document.getElementById("zoomValue").textContent = `${zoom}%`;
+      document.querySelectorAll(".page").forEach(p => {
+        p.style.transform = `scale(${zoom / 100})`;
+      });
     }
 
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      if (currentPage + 2 <= totalPages) {
+    function renderPages() {
+      viewer.innerHTML = '';
+      if (currentPage === 1) {
+        viewer.innerHTML = `
+          <div class="page single">
+            <img src="svgs/Portfolio-01.svg" alt="Page 1" />
+          </div>
+        `;
+      } else {
+        const left = currentPage;
+        const right = currentPage + 1;
+        let content = '';
+        if (left <= totalPages) {
+          content += `<div class="page"><img src="svgs/Portfolio-${String(left).padStart(2, '0')}.svg" alt="Page ${left}" /></div>`;
+        }
+        if (right <= totalPages) {
+          content += `<div class="page"><img src="svgs/Portfolio-${String(right).padStart(2, '0')}.svg" alt="Page ${right}" /></div>`;
+        }
+        viewer.innerHTML = content;
+      }
+      updateZoomDisplay();
+    }
+
+    document.getElementById("zoomIn").onclick = () => {
+      if (zoom < 150) {
+        zoom += 10;
+        updateZoomDisplay();
+      }
+    };
+
+    document.getElementById("zoomOut").onclick = () => {
+      if (zoom > 50) {
+        zoom -= 10;
+        updateZoomDisplay();
+      }
+    };
+
+    document.getElementById("nextPage").onclick = () => {
+      if (currentPage === 1) {
+        currentPage = 2;
+      } else if (currentPage + 2 <= totalPages) {
         currentPage += 2;
-        loadPages();
       }
-    });
+      renderPages();
+    };
 
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      if (currentPage - 2 >= 1) {
+    document.getElementById("prevPage").onclick = () => {
+      if (currentPage === 2) {
+        currentPage = 1;
+      } else if (currentPage - 2 >= 2) {
         currentPage -= 2;
-        loadPages();
       }
-    });
+      renderPages();
+    };
 
-    document.getElementById("zoomIn").addEventListener("click", () => {
-      if (zoomLevel < 150) {
-        zoomLevel += 10;
-        zoomValue.textContent = `${zoomLevel}%`;
-        loadPages();
-      }
-    });
-
-    document.getElementById("zoomOut").addEventListener("click", () => {
-      if (zoomLevel > 50) {
-        zoomLevel -= 10;
-        zoomValue.textContent = `${zoomLevel}%`;
-        loadPages();
-      }
-    });
-
-    loadPages();
+    renderPages();
   </script>
-
 </body>
 </html>
