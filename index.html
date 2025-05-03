@@ -29,29 +29,34 @@
     let zoomLevel = 1.0;
     const totalPages = 70;
 
-    function createImageElement(i) {
+    function createPageWrapper(i) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "page-wrapper";
+      wrapper.style.transform = `scale(${zoomLevel})`;
+
       const img = document.createElement("img");
       const num = (i + 1).toString().padStart(2, "0");
       img.src = `svgs/Portfolio-${num}.svg`;
       img.alt = `Page ${i + 1}`;
       img.className = "portfolio-page";
-      img.style.transform = `scale(${zoomLevel})`;
-      return img;
+
+      wrapper.appendChild(img);
+      return wrapper;
     }
 
     function renderPages() {
       container.innerHTML = "";
 
       if (currentIndex === 0) {
-        const single = createImageElement(0);
+        const single = createPageWrapper(0);
         single.classList.add("single");
         container.appendChild(single);
       } else {
         const left = currentIndex;
         const right = currentIndex + 1;
 
-        if (left < totalPages) container.appendChild(createImageElement(left));
-        if (right < totalPages) container.appendChild(createImageElement(right));
+        if (left < totalPages) container.appendChild(createPageWrapper(left));
+        if (right < totalPages) container.appendChild(createPageWrapper(right));
       }
     }
 
