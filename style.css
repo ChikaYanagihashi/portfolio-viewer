@@ -1,45 +1,37 @@
 body {
   margin: 0;
   padding: 20px;
-  background-color: #f5f5f5;
   font-family: sans-serif;
+  background-color: #f0f0f0;
 }
 
-.controls {
+.controls,
+.navigation,
+.download-link {
   text-align: center;
-  margin-bottom: 10px;
-}
-
-.zoom-buttons {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  margin-bottom: 15px;
 }
 
 button {
-  padding: 8px 14px;
-  font-size: 18px;
-  border: none;
-  border-radius: 5px;
+  padding: 8px 16px;
+  font-size: 16px;
   background-color: #007bff;
   color: white;
+  border: none;
+  border-radius: 4px;
+  margin: 0 10px;
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
-.zoom-level {
+#zoomValue {
   font-weight: bold;
-  min-width: 60px;
+  margin: 0 10px;
   display: inline-block;
-}
-
-.download-link {
-  text-align: center;
-  margin-bottom: 20px;
+  min-width: 60px;
 }
 
 .download-link a {
@@ -52,26 +44,20 @@ button:hover {
   text-decoration: underline;
 }
 
-.portfolio-container {
-  max-width: 900px;
-  margin: 0 auto;
+.portfolio-viewer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
   gap: 20px;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
-.portfolio-page {
-  width: 100%;
+.page {
+  width: 45%;
+  max-width: 100%;
   border: 1px solid #ccc;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
   transform-origin: top center;
-}
-
-img {
-  width: 100%;
-  height: auto;
-  display: block;
 }
