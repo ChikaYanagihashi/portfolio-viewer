@@ -1,26 +1,26 @@
 body {
   margin: 0;
-  padding: 20px;
-  background-color: #f0f0f0;
   font-family: sans-serif;
+  background: #f5f5f5;
+  padding: 20px;
   text-align: center;
 }
 
 .controls {
-  margin-bottom: 20px;
-}
-
-.zoom-controls, .nav-controls, .pdf-download {
-  margin: 10px 0;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 button {
-  padding: 8px 16px;
-  margin: 0 5px;
   font-size: 16px;
+  padding: 6px 12px;
   background-color: #007bff;
-  border: none;
   color: white;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
 }
@@ -29,33 +29,44 @@ button:hover {
   background-color: #0056b3;
 }
 
-.pdf-download a {
-  color: #007bff;
-  text-decoration: none;
-  font-size: 16px;
+#zoomValue {
+  min-width: 50px;
+  display: inline-block;
+  font-weight: bold;
 }
 
-.pdf-download a:hover {
+.download-link {
+  margin-bottom: 20px;
+}
+
+.download-link a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.download-link a:hover {
   text-decoration: underline;
 }
 
 .viewer {
   display: flex;
   justify-content: center;
-  align-items: start;
+  gap: 40px; /* To prevent overlapping on zoom */
   flex-wrap: nowrap;
-  gap: 20px;
   overflow-x: auto;
+  padding: 10px;
 }
 
 .page {
-  max-width: 45%;
+  width: 400px;
   border: 1px solid #ccc;
   background: white;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: transform 0.2s ease;
+  transform-origin: top center;
 }
 
-.page.single {
-  max-width: 60%;
+.placeholder {
+  visibility: hidden;
 }
