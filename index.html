@@ -7,14 +7,11 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <div class="controls">
-    <button id="prevBtn">← Prev</button>
-    <button id="zoomOutBtn">−</button>
-    <span id="zoomValue">100%</span>
-    <button id="zoomInBtn">+</button>
-    <button id="nextBtn">Next →</button>
-    <a id="pdfDownload" href="portfolio_print.pdf" download>Download PDF</a>
+    <button id="zoomOut">−</button>
+    <span id="zoomDisplay">100%</span>
+    <button id="zoomIn">＋</button>
+    <a href="portfolio_print.pdf" download class="download-link">Download PDF (CMYK)</a>
   </div>
 
   <div class="viewport">
@@ -23,81 +20,61 @@
 
   <script>
     const container = document.getElementById("portfolioContainer");
-    const zoomValue = document.getElementById("zoomValue");
+    let scale = 1.0;
 
-    let currentIndex = 0;
-    let zoomLevel = 1.0;
-    const totalPages = 70;
-
-    function createPageWrapper(i) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "page-wrapper";
-      wrapper.style.transform = `scale(${zoomLevel})`;
-      wrapper.style.backgroundColor = "#ffffff";
-
-      const num = (i + 1).toString().padStart(2, "0");
-      const object = document.createElement("object");
-      object.data = `svgs/Portfolio-${num}.svg`;
-      object.type = "image/svg+xml";
-      object.className = "portfolio-page";
-
-      wrapper.appendChild(object);
-      return wrapper;
+    function updateZoomDisplay() {
+      document.getElementById("zoomDisplay").textContent = `${Math.round(scale * 100)}%`;
     }
 
-    function renderPages() {
-      container.innerHTML = "";
+    for (let i = 1; i <= 70; i++) {
+      const img = document.createElement("img");
+      const num = i.toString().padStart(2, '0');
+      img.src = `svgs/Portfolio-${num}.svg`;
+      img.alt = `Portfolio Page ${i}`;
+      img.className = "portfolio-page";
 
-      if (currentIndex === 0) {
-        const single = createPageWrapper(0);
-        single.classList.add("single");
-        container.appendChild(single);
-      } else {
-        const left = currentIndex;
-        const right = currentIndex + 1;
+      if (i === 1) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "single-page";
+        wrapper.appendChild(img);
+        container.appendChild(wrapper);
+      } else if (i % 2 === 0) {
+        const spread = document.createElement("div");
+        spread.className = "spread";
+        spread.appendChild(img);
 
-        if (left < totalPages) container.appendChild(createPageWrapper(left));
-        if (right < totalPages) container.appendChild(createPageWrapper(right));
+        if (i + 1 <= 70) {
+          const next = document.createElement("img");
+          const nextNum = (i + 1).toString().padStart(2, '0');
+          next.src = `svgs/Portfolio-${nextNum}.svg`;
+          next.alt = `Portfolio Page ${i + 1}`;
+          next.className = "portfolio-page";
+          spread.appendChild(next);
+        }
+
+        container.appendChild(spread);
+        i++;
       }
-
-      updateContainerGap();
     }
 
-    function updateZoom() {
-      zoomValue.textContent = `${Math.round(zoomLevel * 100)}%`;
-      renderPages();
+    document.getElementById("zoomIn").addEventListener("click", () => {
+      scale = Math.min(scale + 0.1, 2.0);
+      applyZoom();
+    });
+
+    document.getElementById("zoomOut").addEventListener("click", () => {
+      scale = Math.max(scale - 0.1, 0.5);
+      applyZoom();
+    });
+
+    function applyZoom() {
+      document.querySelectorAll(".portfolio-page").forEach(page => {
+        page.style.transform = `scale(${scale})`;
+      });
+      updateZoomDisplay();
     }
 
-    function updateContainerGap() {
-      const baseGap = window.innerWidth * 0.04; // 4vw
-      const newGap = baseGap * zoomLevel;
-      container.style.gap = `${newGap}px`;
-    }
-
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      if (currentIndex === 0) return;
-      currentIndex = Math.max(0, currentIndex - 2);
-      renderPages();
-    });
-
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      if (currentIndex === 0) currentIndex = 1;
-      else currentIndex = Math.min(totalPages - 1, currentIndex + 2);
-      renderPages();
-    });
-
-    document.getElementById("zoomInBtn").addEventListener("click", () => {
-      zoomLevel = Math.min(2.0, zoomLevel + 0.1);
-      updateZoom();
-    });
-
-    document.getElementById("zoomOutBtn").addEventListener("click", () => {
-      zoomLevel = Math.max(0.5, zoomLevel - 0.1);
-      updateZoom();
-    });
-
-    renderPages();
+    updateZoomDisplay();
   </script>
-
 </body>
 </html>
