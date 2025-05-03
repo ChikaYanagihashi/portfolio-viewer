@@ -40,11 +40,10 @@ body {
   padding: 20px;
 }
 
-.single-page,
 .spread {
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   overflow: hidden;
 }
 
@@ -61,4 +60,11 @@ body {
   background-color: #ffffff;
   border: 1px solid #ddd;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 空ページとして表示される要素 */
+.empty-page {
+  width: 45vw;
+  height: auto;
+  background-color: #ffffff;
 }

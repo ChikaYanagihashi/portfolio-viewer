@@ -21,44 +21,49 @@
     let scale = 1.0;
 
     function loadPortfolio() {
-      for (let i = 1; i <= 70;) {
-        if (i === 1) {
-          const wrapper = document.createElement("div");
-          wrapper.className = "single-page";
+      // First page (single right-hand page)
+      const firstSpread = document.createElement("div");
+      firstSpread.className = "spread";
 
+      const leftSpacer = document.createElement("div");
+      leftSpacer.className = "page-wrapper empty-page";
+      firstSpread.appendChild(leftSpacer);
+
+      const firstPage = document.createElement("div");
+      firstPage.className = "page-wrapper";
+
+      const img1 = document.createElement("img");
+      img1.src = "svgs/Portfolio-01.svg";
+      img1.alt = "Portfolio Page 1";
+      img1.className = "portfolio-page";
+      firstPage.appendChild(img1);
+      firstSpread.appendChild(firstPage);
+      container.appendChild(firstSpread);
+
+      // Remaining spreads
+      for (let i = 2; i <= 70; i += 2) {
+        const spread = document.createElement("div");
+        spread.className = "spread";
+
+        for (let j = 0; j < 2; j++) {
           const pageWrapper = document.createElement("div");
           pageWrapper.className = "page-wrapper";
 
-          const img = document.createElement("img");
-          const num = i.toString().padStart(2, '0');
-          img.src = `svgs/Portfolio-${num}.svg`;
-          img.alt = `Portfolio Page ${i}`;
-          img.className = "portfolio-page";
-
-          pageWrapper.appendChild(img);
-          wrapper.appendChild(pageWrapper);
-          container.appendChild(wrapper);
-          i++;
-        } else {
-          const spread = document.createElement("div");
-          spread.className = "spread";
-
-          for (let j = 0; j < 2 && i <= 70; j++, i++) {
-            const pageWrapper = document.createElement("div");
-            pageWrapper.className = "page-wrapper";
-
+          const pageNum = (i + j).toString().padStart(2, '0');
+          if (i + j <= 70) {
             const img = document.createElement("img");
-            const num = i.toString().padStart(2, '0');
-            img.src = `svgs/Portfolio-${num}.svg`;
-            img.alt = `Portfolio Page ${i}`;
+            img.src = `svgs/Portfolio-${pageNum}.svg`;
+            img.alt = `Portfolio Page ${i + j}`;
             img.className = "portfolio-page";
-
             pageWrapper.appendChild(img);
-            spread.appendChild(pageWrapper);
+          } else {
+            pageWrapper.classList.add("empty-page");
           }
 
-          container.appendChild(spread);
+          spread.appendChild(pageWrapper);
         }
+
+        container.appendChild(spread);
       }
     }
 
