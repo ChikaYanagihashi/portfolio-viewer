@@ -40,43 +40,50 @@
       wrapper.className = "spread";
 
       if (currentIndex === 0) {
-        // Show first page alone on the right
-        const emptyDiv = document.createElement("div");
-        emptyDiv.className = "page-wrapper empty";
-        wrapper.appendChild(emptyDiv);
+        const empty = document.createElement("div");
+        empty.className = "page-wrapper empty";
+        wrapper.appendChild(empty);
 
-        const pageWrapper = document.createElement("div");
-        pageWrapper.className = "page-wrapper";
-        const img = document.createElement("img");
-        img.src = `svgs/Portfolio-${formatPageNumber(1)}.svg`;
-        img.alt = `Portfolio Page 1`;
-        img.className = "portfolio-page";
-        pageWrapper.appendChild(img);
+        const pageWrapper = createPageWrapper(1);
         wrapper.appendChild(pageWrapper);
       } else {
-        // Show two pages (spread)
         for (let i = 0; i < 2; i++) {
           const pageNum = currentIndex + i + 1;
           if (pageNum > totalPages) break;
-
-          const pageWrapper = document.createElement("div");
-          pageWrapper.className = "page-wrapper";
-          const img = document.createElement("img");
-          img.src = `svgs/Portfolio-${formatPageNumber(pageNum)}.svg`;
-          img.alt = `Portfolio Page ${pageNum}`;
-          img.className = "portfolio-page";
-          pageWrapper.appendChild(img);
+          const pageWrapper = createPageWrapper(pageNum);
           wrapper.appendChild(pageWrapper);
         }
       }
 
       container.appendChild(wrapper);
-      applyZoom();
+      updateZoomDisplay();
+    }
+
+    function createPageWrapper(pageNum) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "page-wrapper";
+      wrapper.style.overflowX = "auto";
+
+      const inner = document.createElement("div");
+      inner.className = "page-inner";
+      inner.style.transform = `scale(${scale})`;
+      inner.style.transformOrigin = "top left";
+      inner.style.width = `${100 / scale}%`;
+
+      const img = document.createElement("img");
+      img.src = `svgs/Portfolio-${formatPageNumber(pageNum)}.svg`;
+      img.alt = `Portfolio Page ${pageNum}`;
+      img.className = "portfolio-page";
+
+      inner.appendChild(img);
+      wrapper.appendChild(inner);
+      return wrapper;
     }
 
     function applyZoom() {
-      document.querySelectorAll(".page-wrapper").forEach(wrapper => {
-        wrapper.style.transform = `scale(${scale})`;
+      document.querySelectorAll(".page-inner").forEach(inner => {
+        inner.style.transform = `scale(${scale})`;
+        inner.style.width = `${100 / scale}%`;
       });
       updateZoomDisplay();
     }
@@ -112,7 +119,6 @@
       renderPages();
     });
 
-    // 初期表示
     renderPages();
   </script>
 </body>

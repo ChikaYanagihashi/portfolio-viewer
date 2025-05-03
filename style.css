@@ -44,26 +44,34 @@ body {
 
 .spread {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
-  gap: 40px; /* Gap between pages */
+  gap: 40px;
 }
 
 .page-wrapper {
-  transform-origin: top center;
-  transition: transform 0.2s ease;
   background-color: #ffffff;
-  padding: 10px;
+  padding: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-height: 90vh;
+  max-width: 50vw;
 }
 
 .page-wrapper.empty {
   visibility: hidden;
 }
 
-.portfolio-page {
-  width: 45vw;
-  height: auto;
+.page-inner {
   display: block;
+  width: 100%;
+  transform-origin: top left;
+  transition: transform 0.2s ease;
+}
+
+.portfolio-page {
+  display: block;
+  width: 100%;
+  height: auto;
   background-color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
