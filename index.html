@@ -9,92 +9,74 @@
 <body>
 
   <div class="controls">
-    <button id="prevBtn">← Previous</button>
+    <button id="prevBtn">← Prev</button>
     <button id="zoomOutBtn">−</button>
-    <span id="zoomValue">100%</span>
+    <span id="zoomDisplay">100%</span>
     <button id="zoomInBtn">+</button>
     <button id="nextBtn">Next →</button>
-    <a id="pdfDownload" href="portfolio_print.pdf" download>Download PDF</a>
+    <a href="portfolio_print.pdf" download>Download PDF</a>
   </div>
 
-  <div class="portfolio-container" id="portfolioContainer"></div>
-  <div class="page-indicator" id="pageIndicator"></div>
+  <div id="viewer" class="viewer"></div>
 
   <script>
-    const container = document.getElementById("portfolioContainer");
-    const zoomValue = document.getElementById("zoomValue");
-    const pageIndicator = document.getElementById("pageIndicator");
-    let currentIndex = 0;
-    let zoomLevel = 1.0;
+    const viewer = document.getElementById("viewer");
+    const zoomDisplay = document.getElementById("zoomDisplay");
+
     const totalPages = 70;
+    let currentIndex = 0;
+    let zoom = 1.0;
 
-    const PAGE_WIDTH = 420; // base width at 100%
-    const GAP_AT_100 = 40;  // gap between pages at 100%
-
-    function createImageElement(i) {
+    function createImgElement(index) {
       const img = document.createElement("img");
-      const num = (i + 1).toString().padStart(2, "0");
+      const num = String(index + 1).padStart(2, "0");
       img.src = `svgs/Portfolio-${num}.svg`;
-      img.alt = `Portfolio Page ${i + 1}`;
-      img.className = "portfolio-page";
-      img.style.width = `${PAGE_WIDTH * zoomLevel}px`;
+      img.alt = `Portfolio Page ${index + 1}`;
+      img.className = "page";
+      img.style.transform = `scale(${zoom})`;
       return img;
     }
 
     function renderPages() {
-      container.innerHTML = "";
-
-      const gap = GAP_AT_100 * zoomLevel;
-      container.style.gap = `${gap}px`;
-
-      const pages = [];
+      viewer.innerHTML = "";
+      viewer.style.gap = `${40 * zoom}px`;
 
       if (currentIndex === 0) {
-        const firstPage = createImageElement(0);
-        const placeholder = document.createElement("div");
-        placeholder.style.width = `${PAGE_WIDTH * zoomLevel}px`;
-        placeholder.className = "portfolio-page empty";
-        pages.push(placeholder, firstPage);
-        pageIndicator.textContent = `Page 1`;
+        const first = createImgElement(0);
+        first.classList.add("single");
+        viewer.appendChild(first);
       } else {
         const left = currentIndex;
         const right = currentIndex + 1;
 
-        if (left < totalPages) pages.push(createImageElement(left));
-        if (right < totalPages) pages.push(createImageElement(right));
-
-        pageIndicator.textContent = `Pages ${left + 1}–${Math.min(right + 1, totalPages)}`;
+        if (left < totalPages) viewer.appendChild(createImgElement(left));
+        if (right < totalPages) viewer.appendChild(createImgElement(right));
       }
-
-      pages.forEach(p => container.appendChild(p));
     }
 
-    document.getElementById("prevBtn").addEventListener("click", () => {
+    document.getElementById("prevBtn").onclick = () => {
       if (currentIndex === 0) return;
       currentIndex = Math.max(0, currentIndex - 2);
       renderPages();
-    });
+    };
 
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      if (currentIndex === 0) currentIndex = 1;
-      else currentIndex = Math.min(totalPages - 1, currentIndex + 2);
+    document.getElementById("nextBtn").onclick = () => {
+      currentIndex = currentIndex === 0 ? 1 : currentIndex + 2;
+      if (currentIndex >= totalPages) currentIndex = totalPages - 1;
       renderPages();
-    });
+    };
 
-    document.getElementById("zoomInBtn").addEventListener("click", () => {
-      zoomLevel = Math.min(2.0, zoomLevel + 0.1);
-      updateZoom();
-    });
-
-    document.getElementById("zoomOutBtn").addEventListener("click", () => {
-      zoomLevel = Math.max(0.5, zoomLevel - 0.1);
-      updateZoom();
-    });
-
-    function updateZoom() {
-      zoomValue.textContent = `${Math.round(zoomLevel * 100)}%`;
+    document.getElementById("zoomInBtn").onclick = () => {
+      zoom = Math.min(2.0, zoom + 0.1);
+      zoomDisplay.textContent = `${Math.round(zoom * 100)}%`;
       renderPages();
-    }
+    };
+
+    document.getElementById("zoomOutBtn").onclick = () => {
+      zoom = Math.max(0.5, zoom - 0.1);
+      zoomDisplay.textContent = `${Math.round(zoom * 100)}%`;
+      renderPages();
+    };
 
     renderPages();
   </script>
