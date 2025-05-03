@@ -28,28 +28,33 @@
     let zoomLevel = 1.0;
     const totalPages = 70;
 
+    const PAGE_WIDTH = 420; // base width at 100%
+    const GAP_AT_100 = 40;  // gap between pages at 100%
+
     function createImageElement(i) {
       const img = document.createElement("img");
       const num = (i + 1).toString().padStart(2, "0");
       img.src = `svgs/Portfolio-${num}.svg`;
       img.alt = `Portfolio Page ${i + 1}`;
       img.className = "portfolio-page";
-      img.style.transform = `scale(${zoomLevel})`;
+      img.style.width = `${PAGE_WIDTH * zoomLevel}px`;
       return img;
     }
 
     function renderPages() {
       container.innerHTML = "";
 
-      const gap = 40 * zoomLevel;
+      const gap = GAP_AT_100 * zoomLevel;
       container.style.gap = `${gap}px`;
 
       const pages = [];
 
       if (currentIndex === 0) {
-        const singlePage = createImageElement(0);
-        singlePage.classList.add("single");
-        pages.push(singlePage);
+        const firstPage = createImageElement(0);
+        const placeholder = document.createElement("div");
+        placeholder.style.width = `${PAGE_WIDTH * zoomLevel}px`;
+        placeholder.className = "portfolio-page empty";
+        pages.push(placeholder, firstPage);
         pageIndicator.textContent = `Page 1`;
       } else {
         const left = currentIndex;
