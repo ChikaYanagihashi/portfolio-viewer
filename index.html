@@ -8,67 +8,70 @@
 </head>
 <body>
   <div class="controls">
+    <button id="prevPage">← Previous</button>
     <button id="zoomOut">−</button>
     <span id="zoomDisplay">100%</span>
     <button id="zoomIn">＋</button>
+    <button id="nextPage">Next →</button>
     <a href="portfolio_print.pdf" class="download-btn" download>Download PDF</a>
   </div>
 
   <div class="portfolio-container" id="portfolioContainer"></div>
 
   <script>
-    const container = document.getElementById("portfolioContainer");
+    const totalPages = 70;
+    let currentIndex = 0;
     let scale = 1.0;
 
-    function loadPortfolio() {
-      // First page (single right-hand page)
-      const firstSpread = document.createElement("div");
-      firstSpread.className = "spread";
+    const container = document.getElementById("portfolioContainer");
 
-      const leftSpacer = document.createElement("div");
-      leftSpacer.className = "page-wrapper empty-page";
-      firstSpread.appendChild(leftSpacer);
-
-      const firstPage = document.createElement("div");
-      firstPage.className = "page-wrapper";
-
-      const img1 = document.createElement("img");
-      img1.src = "svgs/Portfolio-01.svg";
-      img1.alt = "Portfolio Page 1";
-      img1.className = "portfolio-page";
-      firstPage.appendChild(img1);
-      firstSpread.appendChild(firstPage);
-      container.appendChild(firstSpread);
-
-      // Remaining spreads
-      for (let i = 2; i <= 70; i += 2) {
-        const spread = document.createElement("div");
-        spread.className = "spread";
-
-        for (let j = 0; j < 2; j++) {
-          const pageWrapper = document.createElement("div");
-          pageWrapper.className = "page-wrapper";
-
-          const pageNum = (i + j).toString().padStart(2, '0');
-          if (i + j <= 70) {
-            const img = document.createElement("img");
-            img.src = `svgs/Portfolio-${pageNum}.svg`;
-            img.alt = `Portfolio Page ${i + j}`;
-            img.className = "portfolio-page";
-            pageWrapper.appendChild(img);
-          } else {
-            pageWrapper.classList.add("empty-page");
-          }
-
-          spread.appendChild(pageWrapper);
-        }
-
-        container.appendChild(spread);
-      }
+    function formatPageNumber(i) {
+      return i.toString().padStart(2, '0');
     }
 
     function updateZoomDisplay() {
       document.getElementById("zoomDisplay").textContent = `${Math.round(scale * 100)}%`;
+    }
+
+    function renderPages() {
+      container.innerHTML = "";
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "spread";
+
+      if (currentIndex === 0) {
+        // Show first page alone on the right
+        const emptyDiv = document.createElement("div");
+        emptyDiv.className = "page-wrapper empty";
+        wrapper.appendChild(emptyDiv);
+
+        const pageWrapper = document.createElement("div");
+        pageWrapper.className = "page-wrapper";
+        const img = document.createElement("img");
+        img.src = `svgs/Portfolio-${formatPageNumber(1)}.svg`;
+        img.alt = `Portfolio Page 1`;
+        img.className = "portfolio-page";
+        pageWrapper.appendChild(img);
+        wrapper.appendChild(pageWrapper);
+      } else {
+        // Show two pages (spread)
+        for (let i = 0; i < 2; i++) {
+          const pageNum = currentIndex + i + 1;
+          if (pageNum > totalPages) break;
+
+          const pageWrapper = document.createElement("div");
+          pageWrapper.className = "page-wrapper";
+          const img = document.createElement("img");
+          img.src = `svgs/Portfolio-${formatPageNumber(pageNum)}.svg`;
+          img.alt = `Portfolio Page ${pageNum}`;
+          img.className = "portfolio-page";
+          pageWrapper.appendChild(img);
+          wrapper.appendChild(pageWrapper);
+        }
+      }
+
+      container.appendChild(wrapper);
+      applyZoom();
     }
 
     function applyZoom() {
@@ -88,8 +91,29 @@
       applyZoom();
     });
 
-    loadPortfolio();
-    applyZoom();
+    document.getElementById("nextPage").addEventListener("click", () => {
+      if (currentIndex === 0) {
+        currentIndex = 1;
+      } else {
+        currentIndex += 2;
+      }
+      if (currentIndex >= totalPages) {
+        currentIndex = totalPages - (totalPages % 2 === 0 ? 2 : 1);
+      }
+      renderPages();
+    });
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+      if (currentIndex <= 1) {
+        currentIndex = 0;
+      } else {
+        currentIndex -= 2;
+      }
+      renderPages();
+    });
+
+    // 初期表示
+    renderPages();
   </script>
 </body>
 </html>
