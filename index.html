@@ -25,8 +25,8 @@
     let currentIndex = 0;
     let zoom = 1;
     const zoomStep = 0.1;
-    const maxZoom = 2;
     const minZoom = 0.5;
+    const maxZoom = 2;
 
     function renderPages() {
       pagesContainer.innerHTML = "";
@@ -36,17 +36,11 @@
 
       pagesToShow.forEach(pageNum => {
         if (pageNum > totalPages) return;
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "page-frame";
-        wrapper.style.transform = `scale(${zoom})`;
-
         const img = document.createElement("img");
         img.src = `svgs/Portfolio-${String(pageNum).padStart(2, "0")}.svg`;
         img.className = "page";
-
-        wrapper.appendChild(img);
-        pagesContainer.appendChild(wrapper);
+        img.style.transform = `scale(${zoom})`;
+        pagesContainer.appendChild(img);
       });
 
       pagesContainer.classList.toggle("single", isFirstPage);
@@ -72,17 +66,13 @@
     }
 
     function zoomIn() {
-      if (zoom < maxZoom) {
-        zoom = Math.min(maxZoom, zoom + zoomStep);
-        renderPages();
-      }
+      zoom = Math.min(maxZoom, zoom + zoomStep);
+      renderPages();
     }
 
     function zoomOut() {
-      if (zoom > minZoom) {
-        zoom = Math.max(minZoom, zoom - zoomStep);
-        renderPages();
-      }
+      zoom = Math.max(minZoom, zoom - zoomStep);
+      renderPages();
     }
 
     window.addEventListener("load", renderPages);
