@@ -11,54 +11,70 @@
     <button id="zoomOut">−</button>
     <span id="zoomDisplay">100%</span>
     <button id="zoomIn">＋</button>
-    <a href="portfolio_print.pdf" download class="download-link">Download PDF (CMYK)</a>
+    <a href="portfolio_print.pdf" class="download-btn" download>Download PDF</a>
   </div>
 
-  <div class="viewport">
-    <div class="portfolio-container" id="portfolioContainer"></div>
-  </div>
+  <div class="portfolio-container" id="portfolioContainer"></div>
 
   <script>
     const container = document.getElementById("portfolioContainer");
     let scale = 1.0;
 
+    function loadPortfolio() {
+      for (let i = 1; i <= 70;) {
+        if (i === 1) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "single-page";
+
+          const pageWrapper = document.createElement("div");
+          pageWrapper.className = "page-wrapper";
+
+          const img = document.createElement("img");
+          const num = i.toString().padStart(2, '0');
+          img.src = `svgs/Portfolio-${num}.svg`;
+          img.alt = `Portfolio Page ${i}`;
+          img.className = "portfolio-page";
+
+          pageWrapper.appendChild(img);
+          wrapper.appendChild(pageWrapper);
+          container.appendChild(wrapper);
+          i++;
+        } else {
+          const spread = document.createElement("div");
+          spread.className = "spread";
+
+          for (let j = 0; j < 2 && i <= 70; j++, i++) {
+            const pageWrapper = document.createElement("div");
+            pageWrapper.className = "page-wrapper";
+
+            const img = document.createElement("img");
+            const num = i.toString().padStart(2, '0');
+            img.src = `svgs/Portfolio-${num}.svg`;
+            img.alt = `Portfolio Page ${i}`;
+            img.className = "portfolio-page";
+
+            pageWrapper.appendChild(img);
+            spread.appendChild(pageWrapper);
+          }
+
+          container.appendChild(spread);
+        }
+      }
+    }
+
     function updateZoomDisplay() {
       document.getElementById("zoomDisplay").textContent = `${Math.round(scale * 100)}%`;
     }
 
-    for (let i = 1; i <= 70; i++) {
-      const img = document.createElement("img");
-      const num = i.toString().padStart(2, '0');
-      img.src = `svgs/Portfolio-${num}.svg`;
-      img.alt = `Portfolio Page ${i}`;
-      img.className = "portfolio-page";
-
-      if (i === 1) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "single-page";
-        wrapper.appendChild(img);
-        container.appendChild(wrapper);
-      } else if (i % 2 === 0) {
-        const spread = document.createElement("div");
-        spread.className = "spread";
-        spread.appendChild(img);
-
-        if (i + 1 <= 70) {
-          const next = document.createElement("img");
-          const nextNum = (i + 1).toString().padStart(2, '0');
-          next.src = `svgs/Portfolio-${nextNum}.svg`;
-          next.alt = `Portfolio Page ${i + 1}`;
-          next.className = "portfolio-page";
-          spread.appendChild(next);
-        }
-
-        container.appendChild(spread);
-        i++;
-      }
+    function applyZoom() {
+      document.querySelectorAll(".page-wrapper").forEach(wrapper => {
+        wrapper.style.transform = `scale(${scale})`;
+      });
+      updateZoomDisplay();
     }
 
     document.getElementById("zoomIn").addEventListener("click", () => {
-      scale = Math.min(scale + 0.1, 2.0);
+      scale = Math.min(scale + 0.1, 2);
       applyZoom();
     });
 
@@ -67,14 +83,8 @@
       applyZoom();
     });
 
-    function applyZoom() {
-      document.querySelectorAll(".portfolio-page").forEach(page => {
-        page.style.transform = `scale(${scale})`;
-      });
-      updateZoomDisplay();
-    }
-
-    updateZoomDisplay();
+    loadPortfolio();
+    applyZoom();
   </script>
 </body>
 </html>

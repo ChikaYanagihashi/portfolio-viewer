@@ -2,71 +2,63 @@ body {
   margin: 0;
   background-color: #ffffff;
   font-family: sans-serif;
-  color: #333;
+  overflow-x: auto;
 }
 
 .controls {
-  text-align: center;
-  padding: 15px;
-  background-color: #f9f9f9;
   position: sticky;
   top: 0;
+  background: #fff;
+  padding: 10px;
+  text-align: center;
   z-index: 10;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ccc;
 }
 
 .controls button {
   font-size: 18px;
-  padding: 6px 12px;
+  padding: 5px 12px;
+  margin: 0 8px;
   cursor: pointer;
 }
 
-.controls .download-link {
+.download-btn {
   margin-left: 20px;
-  text-decoration: none;
   font-size: 14px;
-  color: #0066cc;
-}
-
-.viewport {
-  display: flex;
-  justify-content: center;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 30px 0;
-  background-color: #ffffff;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #333;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: #f9f9f9;
 }
 
 .portfolio-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: fit-content;
-  gap: 40px;
+  padding: 20px;
 }
 
+.single-page,
 .spread {
   display: flex;
   justify-content: center;
-  gap: 40px; /* distance between pages */
+  margin-bottom: 30px;
+  overflow: hidden;
 }
 
-.single-page {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
+.page-wrapper {
+  margin: 0 20px;
+  transform-origin: top center;
+  transition: transform 0.2s ease;
 }
 
 .portfolio-page {
+  width: 45vw;
+  height: auto;
+  display: block;
   background-color: #ffffff;
   border: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transform-origin: top center;
-  transition: transform 0.2s ease;
-  max-width: 45vw;
-  height: auto;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
