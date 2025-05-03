@@ -8,90 +8,113 @@
 </head>
 <body>
 
-  <div class="top-bar">
-    <div class="controls">
+  <div class="controls">
+    <div class="zoom-controls">
       <button id="zoomOut">−</button>
       <span id="zoomValue">100%</span>
       <button id="zoomIn">＋</button>
-      <button id="prevPage">⟵ Previous</button>
-      <button id="nextPage">Next ⟶</button>
     </div>
-    <div class="download">
-      <a href="portfolio_print.pdf" download>📄 Download CMYK PDF</a>
+
+    <div class="nav-controls">
+      <button id="prevBtn">← Prev</button>
+      <button id="nextBtn">Next →</button>
+    </div>
+
+    <div class="pdf-download">
+      <a href="portfolio_print.pdf" download>📄 Download PDF (CMYK Version)</a>
     </div>
   </div>
 
   <div class="viewer" id="viewer"></div>
 
   <script>
-    const totalPages = 70;
     const viewer = document.getElementById("viewer");
-    let currentPage = 1;
+    const zoomValue = document.getElementById("zoomValue");
+    const zoomIn = document.getElementById("zoomIn");
+    const zoomOut = document.getElementById("zoomOut");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    let currentIndex = 0;
     let zoom = 100;
 
-    function updateZoomDisplay() {
-      document.getElementById("zoomValue").textContent = `${zoom}%`;
-      document.querySelectorAll(".page").forEach(p => {
-        p.style.transform = `scale(${zoom / 100})`;
-      });
+    const totalPages = 70;
+
+    function pad(num) {
+      return num.toString().padStart(2, '0');
     }
 
     function renderPages() {
-      viewer.innerHTML = '';
-      if (currentPage === 1) {
-        viewer.innerHTML = `
-          <div class="page single">
-            <img src="svgs/Portfolio-01.svg" alt="Page 1" />
-          </div>
-        `;
+      viewer.innerHTML = "";
+
+      const pages = [];
+
+      if (currentIndex === 0) {
+        const rightPage = document.createElement("img");
+        rightPage.src = `svgs/Portfolio-${pad(1)}.svg`;
+        rightPage.className = "page single right";
+        pages.push(rightPage);
       } else {
-        const left = currentPage;
-        const right = currentPage + 1;
-        let content = '';
-        if (left <= totalPages) {
-          content += `<div class="page"><img src="svgs/Portfolio-${String(left).padStart(2, '0')}.svg" alt="Page ${left}" /></div>`;
+        const leftIndex = currentIndex + 1;
+        const rightIndex = currentIndex + 2;
+
+        if (leftIndex <= totalPages) {
+          const leftPage = document.createElement("img");
+          leftPage.src = `svgs/Portfolio-${pad(leftIndex)}.svg`;
+          leftPage.className = "page left";
+          pages.push(leftPage);
         }
-        if (right <= totalPages) {
-          content += `<div class="page"><img src="svgs/Portfolio-${String(right).padStart(2, '0')}.svg" alt="Page ${right}" /></div>`;
+
+        if (rightIndex <= totalPages) {
+          const rightPage = document.createElement("img");
+          rightPage.src = `svgs/Portfolio-${pad(rightIndex)}.svg`;
+          rightPage.className = "page right";
+          pages.push(rightPage);
         }
-        viewer.innerHTML = content;
       }
-      updateZoomDisplay();
+
+      pages.forEach(page => {
+        page.style.transform = `scale(${zoom / 100})`;
+        viewer.appendChild(page);
+      });
+
+      zoomValue.textContent = `${zoom}%`;
     }
 
-    document.getElementById("zoomIn").onclick = () => {
+    zoomIn.onclick = () => {
       if (zoom < 150) {
         zoom += 10;
-        updateZoomDisplay();
+        renderPages();
       }
     };
 
-    document.getElementById("zoomOut").onclick = () => {
+    zoomOut.onclick = () => {
       if (zoom > 50) {
         zoom -= 10;
-        updateZoomDisplay();
+        renderPages();
       }
     };
 
-    document.getElementById("nextPage").onclick = () => {
-      if (currentPage === 1) {
-        currentPage = 2;
-      } else if (currentPage + 2 <= totalPages) {
-        currentPage += 2;
+    nextBtn.onclick = () => {
+      if (currentIndex === 0) {
+        currentIndex = 1;
+      } else if (currentIndex + 2 < totalPages) {
+        currentIndex += 2;
       }
       renderPages();
     };
 
-    document.getElementById("prevPage").onclick = () => {
-      if (currentPage === 2) {
-        currentPage = 1;
-      } else if (currentPage - 2 >= 2) {
-        currentPage -= 2;
+    prevBtn.onclick = () => {
+      if (currentIndex === 1) {
+        currentIndex = 0;
+      } else if (currentIndex - 2 >= 1) {
+        currentIndex -= 2;
       }
       renderPages();
     };
 
     renderPages();
   </script>
+
 </body>
 </html>
