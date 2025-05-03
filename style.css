@@ -3,27 +3,28 @@ body {
   padding: 0;
   background-color: #ffffff;
   font-family: sans-serif;
-  color: #333;
+  overflow-x: hidden;
+  text-align: center;
 }
 
 .controls {
+  padding: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   gap: 12px;
-  padding: 20px;
+  flex-wrap: wrap;
   background-color: #ffffff;
   border-bottom: 1px solid #ddd;
 }
 
 .controls button,
 .controls a {
-  padding: 8px 12px;
+  padding: 8px 14px;
   font-size: 14px;
-  background-color: #0077cc;
-  color: white;
   border: none;
+  background-color: #007acc;
+  color: #fff;
   border-radius: 4px;
   cursor: pointer;
   text-decoration: none;
@@ -34,19 +35,24 @@ body {
   background-color: #005fa3;
 }
 
-.viewer {
+.viewport {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  padding: 30px 0;
+}
+
+.portfolio-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  flex-wrap: nowrap;
   gap: 40px;
-  padding: 40px;
-  overflow-x: auto;
-  background-color: #ffffff;
+  flex-wrap: nowrap;
 }
 
-.page {
-  max-width: 420px;
+.portfolio-page {
+  width: 45vw;
+  max-width: 800px;
   height: auto;
   transition: transform 0.2s ease;
   transform-origin: top center;
@@ -54,4 +60,5 @@ body {
 
 .single {
   margin-left: auto;
+  margin-right: 0;
 }
