@@ -1,14 +1,14 @@
 body {
   margin: 0;
-  background-color: #ffffff;
   font-family: sans-serif;
+  background-color: #ffffff;
   overflow: hidden;
 }
 
 .controls {
   position: sticky;
   top: 0;
-  background: #fff;
+  background: #ffffff;
   padding: 10px;
   text-align: center;
   z-index: 10;
@@ -34,26 +34,34 @@ body {
 }
 
 .portfolio-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100vw;
   height: calc(100vh - 60px);
   overflow: auto;
   background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spread-wrapper {
+  min-width: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .spread {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 40px; /* Gap between pages */
+  gap: 40px;
+  transform-origin: top left;
+  transition: transform 0.2s ease;
 }
 
 .page-wrapper {
-  transform-origin: top center;
-  transition: transform 0.2s ease;
   background-color: #ffffff;
   padding: 10px;
+  transform-origin: top left;
 }
 
 .page-wrapper.empty {

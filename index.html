@@ -16,14 +16,18 @@
     <a href="portfolio_print.pdf" class="download-btn" download>Download PDF</a>
   </div>
 
-  <div class="portfolio-container" id="portfolioContainer"></div>
+  <div class="portfolio-container" id="portfolioContainer">
+    <div class="spread-wrapper" id="spreadWrapper">
+      <!-- Pages inserted here -->
+    </div>
+  </div>
 
   <script>
     const totalPages = 70;
     let currentIndex = 0;
     let scale = 1.0;
 
-    const container = document.getElementById("portfolioContainer");
+    const wrapper = document.getElementById("spreadWrapper");
 
     function formatPageNumber(i) {
       return i.toString().padStart(2, '0');
@@ -34,61 +38,53 @@
     }
 
     function renderPages() {
-      container.innerHTML = "";
+      wrapper.innerHTML = "";
 
-      const wrapper = document.createElement("div");
-      wrapper.className = "spread";
+      const spread = document.createElement("div");
+      spread.className = "spread";
+      spread.style.transform = `scale(${scale})`;
 
       if (currentIndex === 0) {
-        // Show first page alone on the right
-        const emptyDiv = document.createElement("div");
-        emptyDiv.className = "page-wrapper empty";
-        wrapper.appendChild(emptyDiv);
+        const empty = document.createElement("div");
+        empty.className = "page-wrapper empty";
+        spread.appendChild(empty);
 
-        const pageWrapper = document.createElement("div");
-        pageWrapper.className = "page-wrapper";
+        const imgWrap = document.createElement("div");
+        imgWrap.className = "page-wrapper";
         const img = document.createElement("img");
         img.src = `svgs/Portfolio-${formatPageNumber(1)}.svg`;
         img.alt = `Portfolio Page 1`;
         img.className = "portfolio-page";
-        pageWrapper.appendChild(img);
-        wrapper.appendChild(pageWrapper);
+        imgWrap.appendChild(img);
+        spread.appendChild(imgWrap);
       } else {
-        // Show two pages (spread)
         for (let i = 0; i < 2; i++) {
           const pageNum = currentIndex + i + 1;
           if (pageNum > totalPages) break;
 
-          const pageWrapper = document.createElement("div");
-          pageWrapper.className = "page-wrapper";
+          const imgWrap = document.createElement("div");
+          imgWrap.className = "page-wrapper";
           const img = document.createElement("img");
           img.src = `svgs/Portfolio-${formatPageNumber(pageNum)}.svg`;
           img.alt = `Portfolio Page ${pageNum}`;
           img.className = "portfolio-page";
-          pageWrapper.appendChild(img);
-          wrapper.appendChild(pageWrapper);
+          imgWrap.appendChild(img);
+          spread.appendChild(imgWrap);
         }
       }
 
-      container.appendChild(wrapper);
-      applyZoom();
-    }
-
-    function applyZoom() {
-      document.querySelectorAll(".page-wrapper").forEach(wrapper => {
-        wrapper.style.transform = `scale(${scale})`;
-      });
+      wrapper.appendChild(spread);
       updateZoomDisplay();
     }
 
     document.getElementById("zoomIn").addEventListener("click", () => {
-      scale = Math.min(scale + 0.1, 2);
-      applyZoom();
+      scale = Math.min(scale + 0.1, 2.5);
+      renderPages();
     });
 
     document.getElementById("zoomOut").addEventListener("click", () => {
       scale = Math.max(scale - 0.1, 0.5);
-      applyZoom();
+      renderPages();
     });
 
     document.getElementById("nextPage").addEventListener("click", () => {
@@ -112,7 +108,6 @@
       renderPages();
     });
 
-    // 初期表示
     renderPages();
   </script>
 </body>
